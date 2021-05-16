@@ -24,3 +24,11 @@ async fn it_returns_anime_by_slug() {
 
     assert!(result.themes.is_some());
 }
+
+#[tokio::test]
+async fn it_returns_artists_by_slug() {
+    let client = AnimeThemesClient::default();
+    let result = client.artist("lisa", &["songs"]).await.unwrap();
+
+    assert!(result.songs.is_some());
+}

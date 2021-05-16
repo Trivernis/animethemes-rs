@@ -71,9 +71,10 @@ pub struct Artist {
     #[serde(flatten)]
     pub meta: EntryMetadata,
     pub name: String,
-    pub slog: String,
+    pub slug: String,
     #[serde(alias = "as")]
-    pub as_character: String,
+    pub as_character: Option<String>,
+    pub songs: Option<Vec<Song>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
