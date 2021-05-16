@@ -13,3 +13,14 @@ async fn it_searches() {
     assert!(result.themes.is_some());
     assert!(result.videos.is_some());
 }
+
+#[tokio::test]
+async fn it_returns_anime_by_slug() {
+    let client = AnimeThemesClient::default();
+    let result = client
+        .anime("vivy_fluorite_eyes_song", &["themes"])
+        .await
+        .unwrap();
+
+    assert!(result.themes.is_some());
+}

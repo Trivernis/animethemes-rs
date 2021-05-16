@@ -1,6 +1,7 @@
 use crate::error::ApiResult;
-use crate::models::SearchResponse;
+use crate::models::{Anime, SearchResponse};
 use reqwest::Response;
+use serde::Serialize;
 use std::collections::HashMap;
 
 pub static DEFAULT_API_ENDPOINT: &str = "https://staging.animethemes.moe/api";
@@ -56,12 +57,10 @@ impl AnimeThemesClient {
         fields: &[&str],
         include: &[&str],
     ) -> ApiResult<SearchResponse> {
-        let fields = fields.join(",");
-        let include = include.join(",");
-        let mut query = vec![("q", query), ("include", include.as_str())];
+        let mut query = vec![("q", query.to_string()), ("include", include.join(","))];
 
         if !fields.is_empty() {
-            query.push(("fields[search]", fields.as_str()));
+            query.push(("fields[search]", fields.join(",")));
         }
         let mut response: HashMap<String, SearchResponse> =
             self.api_get("/search", &query[..]).await?.json().await?;
@@ -69,8 +68,22 @@ impl AnimeThemesClient {
         Ok(response.remove("search").unwrap())
     }
 
+    /// Returns an anime by a given slug title
+    pub async fn anime(&self, slug: &str, include: &[&str]) -> ApiResult<Anime> {
+        let mut response: HashMap<String, Anime> = self
+            .api_get(
+                format!("/anime/{}", slug).as_str(),
+                &[("include", include.join(",").as_str())],
+            )
+            .await?
+            .json()
+            .await?;
+
+        Ok(response.remove("anime").unwrap())
+    }
+
     /// Posts a get request to the API endpoint
-    async fn api_get(&self, path: &str, query: &[(&str, &str)]) -> ApiResult<Response> {
+    async fn api_get<T: Serialize + ?Sized>(&self, path: &str, query: &T) -> ApiResult<Response> {
         let response = self
             .client
             .get(format!("{}{}", self.api_endpoint, path))
