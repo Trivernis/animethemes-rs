@@ -32,3 +32,11 @@ async fn it_returns_artists_by_slug() {
 
     assert!(result.songs.is_some());
 }
+
+#[tokio::test]
+async fn it_returns_entries_by_id() {
+    let client = AnimeThemesClient::default();
+    let result = client.entry(11948, &["videos"]).await.unwrap();
+
+    assert!(result.videos.is_some())
+}
