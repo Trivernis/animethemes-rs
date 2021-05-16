@@ -152,6 +152,8 @@ pub struct Image {
     pub meta: EntryMetadata,
     pub path: String,
     pub facet: ImageFacet,
+    pub anime: Option<Vec<Anime>>,
+    pub artists: Option<Vec<Artist>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]

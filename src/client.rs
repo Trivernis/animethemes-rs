@@ -1,5 +1,5 @@
 use crate::error::ApiResult;
-use crate::models::{Anime, Artist, SearchResponse, ThemeEntry};
+use crate::models::{Anime, Artist, Image, SearchResponse, ThemeEntry};
 use reqwest::Response;
 use serde::Serialize;
 use std::collections::HashMap;
@@ -108,6 +108,20 @@ impl AnimeThemesClient {
             .await?;
 
         Ok(response.remove("entry").unwrap())
+    }
+
+    /// Returns an image by id
+    pub async fn image(&self, id: u32, include: &[&str]) -> ApiResult<Image> {
+        let mut response: HashMap<String, Image> = self
+            .api_get(
+                format!("/image/{}", id).as_str(),
+                &[("include", include.join(","))],
+            )
+            .await?
+            .json()
+            .await?;
+
+        Ok(response.remove("image").unwrap())
     }
 
     /// Starts a get request to the API endpoint

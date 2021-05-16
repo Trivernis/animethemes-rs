@@ -40,3 +40,11 @@ async fn it_returns_entries_by_id() {
 
     assert!(result.videos.is_some())
 }
+
+#[tokio::test]
+async fn it_returns_images_by_id() {
+    let client = AnimeThemesClient::default();
+    let result = client.image(7247, &["anime"]).await.unwrap();
+
+    assert!(result.anime.is_some())
+}
