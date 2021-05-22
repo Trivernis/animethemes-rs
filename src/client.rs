@@ -1,6 +1,6 @@
 use crate::error::ApiResult;
 use crate::models::{
-    Anime, AnimeSynonym, Artist, Image, Resource, SearchResponse, Series, ThemeEntry,
+    Anime, AnimeSynonym, Artist, Image, Resource, SearchResponse, Series, Song, ThemeEntry,
 };
 use reqwest::Response;
 use serde::de::DeserializeOwned;
@@ -100,6 +100,11 @@ impl AnimeThemesClient {
     /// Returns a series by slug
     pub async fn series(&self, slug: &str, include: &[&str]) -> ApiResult<Series> {
         self.entry_by_id_with_include("series", slug, include).await
+    }
+
+    /// Returns a song by id
+    pub async fn song(&self, id: u32, include: &[&str]) -> ApiResult<Song> {
+        self.entry_by_id_with_include("song", id, include).await
     }
 
     /// Returns a synonym by id

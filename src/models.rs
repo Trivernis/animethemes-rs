@@ -64,7 +64,7 @@ pub struct Song {
     pub meta: EntryMetadata,
     pub title: String,
     pub artists: Option<Vec<Artist>>,
-    pub entries: Option<Vec<ThemeEntry>>,
+    pub themes: Option<Vec<Theme>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
