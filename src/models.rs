@@ -91,6 +91,7 @@ pub struct ThemeEntry {
     pub spoiler: bool,
     pub notes: String,
     pub videos: Option<Vec<Video>>,
+    pub theme: Option<Theme>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
