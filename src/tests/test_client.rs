@@ -67,3 +67,11 @@ async fn it_returns_series_by_slug() {
 
     assert!(result.anime.is_some())
 }
+
+#[tokio::test]
+async fn it_returns_synonyms_b_id() {
+    let client = AnimeThemesClient::default();
+    let result = client.synonym(2462, &["anime"]).await.unwrap();
+
+    assert!(result.anime.is_some())
+}

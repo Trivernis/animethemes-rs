@@ -36,6 +36,7 @@ pub struct AnimeSynonym {
     #[serde(flatten)]
     pub meta: EntryMetadata,
     pub text: String,
+    pub anime: Option<Anime>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
