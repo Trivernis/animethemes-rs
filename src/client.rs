@@ -1,7 +1,13 @@
 use crate::error::ApiResult;
-use crate::models::SearchResponse;
+use crate::models::{
+    Anime, AnimeSynonym, Artist, Image, Resource, SearchResponse, Series, Song, Theme, ThemeEntry,
+    Video,
+};
 use reqwest::Response;
+use serde::de::DeserializeOwned;
+use serde::Serialize;
 use std::collections::HashMap;
+use std::fmt::Display;
 
 pub static DEFAULT_API_ENDPOINT: &str = "https://staging.animethemes.moe/api";
 pub static DEFAULT_VIDEO_ENDPOINT: &str = "https://animethemes.moe/video/";
@@ -56,12 +62,10 @@ impl AnimeThemesClient {
         fields: &[&str],
         include: &[&str],
     ) -> ApiResult<SearchResponse> {
-        let fields = fields.join(",");
-        let include = include.join(",");
-        let mut query = vec![("q", query), ("include", include.as_str())];
+        let mut query = vec![("q", query.to_string()), ("include", include.join(","))];
 
         if !fields.is_empty() {
-            query.push(("fields[search]", fields.as_str()));
+            query.push(("fields[search]", fields.join(",")));
         }
         let mut response: HashMap<String, SearchResponse> =
             self.api_get("/search", &query[..]).await?.json().await?;
@@ -69,8 +73,78 @@ impl AnimeThemesClient {
         Ok(response.remove("search").unwrap())
     }
 
-    /// Posts a get request to the API endpoint
-    async fn api_get(&self, path: &str, query: &[(&str, &str)]) -> ApiResult<Response> {
+    /// Returns an anime by a given slug string
+    pub async fn anime(&self, slug: &str, include: &[&str]) -> ApiResult<Anime> {
+        self.entry_by_id_with_include("anime", slug, include).await
+    }
+
+    /// Returns an artist by a given slug string
+    pub async fn artist(&self, slug: &str, include: &[&str]) -> ApiResult<Artist> {
+        self.entry_by_id_with_include("artist", slug, include).await
+    }
+
+    /// Returns an entry by a given id
+    pub async fn entry(&self, id: u32, include: &[&str]) -> ApiResult<ThemeEntry> {
+        self.entry_by_id_with_include("entry", id, include).await
+    }
+
+    /// Returns an image by id
+    pub async fn image(&self, id: u32, include: &[&str]) -> ApiResult<Image> {
+        self.entry_by_id_with_include("image", id, include).await
+    }
+
+    /// Returns a resource by id
+    pub async fn resource(&self, id: u32, include: &[&str]) -> ApiResult<Resource> {
+        self.entry_by_id_with_include("resource", id, include).await
+    }
+
+    /// Returns a series by slug
+    pub async fn series(&self, slug: &str, include: &[&str]) -> ApiResult<Series> {
+        self.entry_by_id_with_include("series", slug, include).await
+    }
+
+    /// Returns a song by id
+    pub async fn song(&self, id: u32, include: &[&str]) -> ApiResult<Song> {
+        self.entry_by_id_with_include("song", id, include).await
+    }
+
+    /// Returns a synonym by id
+    pub async fn synonym(&self, id: u32, include: &[&str]) -> ApiResult<AnimeSynonym> {
+        self.entry_by_id_with_include("synonym", id, include).await
+    }
+
+    /// Returns a theme by id
+    pub async fn theme(&self, id: u32, include: &[&str]) -> ApiResult<Theme> {
+        self.entry_by_id_with_include("theme", id, include).await
+    }
+
+    /// Returns a video by basename
+    pub async fn video(&self, basename: &str, include: &[&str]) -> ApiResult<Video> {
+        self.entry_by_id_with_include("video", basename, include)
+            .await
+    }
+
+    /// Generic endpoint with the format /<endpoint>/<id> returning the type on the json field <endpoint>
+    async fn entry_by_id_with_include<T: DeserializeOwned, I: Display>(
+        &self,
+        endpoint: &str,
+        id: I,
+        include: &[&str],
+    ) -> ApiResult<T> {
+        let mut response: HashMap<String, T> = self
+            .api_get(
+                format!("/{}/{}", endpoint, id).as_str(),
+                &[("include", include.join(","))],
+            )
+            .await?
+            .json()
+            .await?;
+
+        Ok(response.remove(endpoint).unwrap())
+    }
+
+    /// Starts a get request to the API endpoint
+    async fn api_get<T: Serialize + ?Sized>(&self, path: &str, query: &T) -> ApiResult<Response> {
         let response = self
             .client
             .get(format!("{}{}", self.api_endpoint, path))

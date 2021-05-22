@@ -36,6 +36,7 @@ pub struct AnimeSynonym {
     #[serde(flatten)]
     pub meta: EntryMetadata,
     pub text: String,
+    pub anime: Option<Anime>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -49,6 +50,8 @@ pub struct Theme {
     pub group: String,
     pub slug: String,
     pub song: Option<Song>,
+    pub anime: Option<Anime>,
+    pub entries: Option<Vec<ThemeEntry>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -63,7 +66,7 @@ pub struct Song {
     pub meta: EntryMetadata,
     pub title: String,
     pub artists: Option<Vec<Artist>>,
-    pub entries: Option<Vec<ThemeEntry>>,
+    pub themes: Option<Vec<Theme>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -71,9 +74,10 @@ pub struct Artist {
     #[serde(flatten)]
     pub meta: EntryMetadata,
     pub name: String,
-    pub slog: String,
+    pub slug: String,
     #[serde(alias = "as")]
-    pub as_character: String,
+    pub as_character: Option<String>,
+    pub songs: Option<Vec<Song>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -107,6 +111,7 @@ pub struct Video {
     pub source: Option<VideoSource>,
     pub overlap: VideoOverlap,
     pub link: String,
+    pub entries: Option<Vec<ThemeEntry>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -131,6 +136,7 @@ pub struct Series {
     pub meta: EntryMetadata,
     pub name: String,
     pub slug: String,
+    pub anime: Option<Vec<Anime>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -139,10 +145,11 @@ pub struct Resource {
     pub meta: EntryMetadata,
     pub link: String,
     pub external_id: u32,
-    #[serde(alias = "type")]
-    pub resource_type: String,
+    pub site: String,
     #[serde(alias = "as")]
-    pub resource_as: String,
+    pub resource_as: Option<String>,
+    pub anime: Option<Vec<Anime>>,
+    pub artists: Option<Vec<Artist>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -151,6 +158,8 @@ pub struct Image {
     pub meta: EntryMetadata,
     pub path: String,
     pub facet: ImageFacet,
+    pub anime: Option<Vec<Anime>>,
+    pub artists: Option<Vec<Artist>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
