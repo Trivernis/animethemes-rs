@@ -56,3 +56,14 @@ async fn it_returns_resources_by_id() {
 
     assert!(result.anime.is_some())
 }
+
+#[tokio::test]
+async fn it_returns_series_by_slug() {
+    let client = AnimeThemesClient::default();
+    let result = client
+        .series("shingeki_no_kyojin", &["anime"])
+        .await
+        .unwrap();
+
+    assert!(result.anime.is_some())
+}

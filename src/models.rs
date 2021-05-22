@@ -132,6 +132,7 @@ pub struct Series {
     pub meta: EntryMetadata,
     pub name: String,
     pub slug: String,
+    pub anime: Option<Vec<Anime>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
