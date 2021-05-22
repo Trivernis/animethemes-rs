@@ -48,3 +48,11 @@ async fn it_returns_images_by_id() {
 
     assert!(result.anime.is_some())
 }
+
+#[tokio::test]
+async fn it_returns_resources_by_id() {
+    let client = AnimeThemesClient::default();
+    let result = client.resource(3588, &["anime"]).await.unwrap();
+
+    assert!(result.anime.is_some())
+}

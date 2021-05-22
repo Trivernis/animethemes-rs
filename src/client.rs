@@ -1,8 +1,10 @@
 use crate::error::ApiResult;
-use crate::models::{Anime, Artist, Image, SearchResponse, ThemeEntry};
+use crate::models::{Anime, Artist, Image, Resource, SearchResponse, ThemeEntry};
 use reqwest::Response;
+use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::collections::HashMap;
+use std::fmt::Display;
 
 pub static DEFAULT_API_ENDPOINT: &str = "https://staging.animethemes.moe/api";
 pub static DEFAULT_VIDEO_ENDPOINT: &str = "https://animethemes.moe/video/";
@@ -70,58 +72,46 @@ impl AnimeThemesClient {
 
     /// Returns an anime by a given slug string
     pub async fn anime(&self, slug: &str, include: &[&str]) -> ApiResult<Anime> {
-        let mut response: HashMap<String, Anime> = self
-            .api_get(
-                format!("/anime/{}", slug).as_str(),
-                &[("include", include.join(","))],
-            )
-            .await?
-            .json()
-            .await?;
-
-        Ok(response.remove("anime").unwrap())
+        self.entry_by_id_with_include("anime", slug, include).await
     }
 
     /// Returns an artist by a given slug string
     pub async fn artist(&self, slug: &str, include: &[&str]) -> ApiResult<Artist> {
-        let mut response: HashMap<String, Artist> = self
-            .api_get(
-                format!("/artist/{}", slug).as_str(),
-                &[("include", include.join(","))],
-            )
-            .await?
-            .json()
-            .await?;
-
-        Ok(response.remove("artist").unwrap())
+        self.entry_by_id_with_include("artist", slug, include).await
     }
 
     /// Returns an entry by a given id
     pub async fn entry(&self, id: u32, include: &[&str]) -> ApiResult<ThemeEntry> {
-        let mut response: HashMap<String, ThemeEntry> = self
-            .api_get(
-                format!("/entry/{}", id).as_str(),
-                &[("include", include.join(","))],
-            )
-            .await?
-            .json()
-            .await?;
-
-        Ok(response.remove("entry").unwrap())
+        self.entry_by_id_with_include("entry", id, include).await
     }
 
     /// Returns an image by id
     pub async fn image(&self, id: u32, include: &[&str]) -> ApiResult<Image> {
-        let mut response: HashMap<String, Image> = self
+        self.entry_by_id_with_include("image", id, include).await
+    }
+
+    /// Returns a resource by id
+    pub async fn resource(&self, id: u32, include: &[&str]) -> ApiResult<Resource> {
+        self.entry_by_id_with_include("resource", id, include).await
+    }
+
+    /// Generic endpoint with the format /<endpoint>/<id> returning the type on the json field <endpoint>
+    async fn entry_by_id_with_include<T: DeserializeOwned, I: Display>(
+        &self,
+        endpoint: &str,
+        id: I,
+        include: &[&str],
+    ) -> ApiResult<T> {
+        let mut response: HashMap<String, T> = self
             .api_get(
-                format!("/image/{}", id).as_str(),
+                format!("/{}/{}", endpoint, id).as_str(),
                 &[("include", include.join(","))],
             )
             .await?
             .json()
             .await?;
 
-        Ok(response.remove("image").unwrap())
+        Ok(response.remove(endpoint).unwrap())
     }
 
     /// Starts a get request to the API endpoint

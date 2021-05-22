@@ -140,10 +140,11 @@ pub struct Resource {
     pub meta: EntryMetadata,
     pub link: String,
     pub external_id: u32,
-    #[serde(alias = "type")]
-    pub resource_type: String,
+    pub site: String,
     #[serde(alias = "as")]
-    pub resource_as: String,
+    pub resource_as: Option<String>,
+    pub anime: Option<Vec<Anime>>,
+    pub artists: Option<Vec<Artist>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
