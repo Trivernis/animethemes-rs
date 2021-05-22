@@ -91,3 +91,14 @@ async fn it_returns_themes_by_id() {
 
     assert!(result.entries.is_some())
 }
+
+#[tokio::test]
+async fn it_returns_videos_by_basename() {
+    let client = AnimeThemesClient::default();
+    let result = client
+        .video("KimiUso-OP2.webm", &["entries"])
+        .await
+        .unwrap();
+
+    assert!(result.entries.is_some())
+}

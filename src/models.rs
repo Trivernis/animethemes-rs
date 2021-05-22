@@ -111,6 +111,7 @@ pub struct Video {
     pub source: Option<VideoSource>,
     pub overlap: VideoOverlap,
     pub link: String,
+    pub entries: Option<Vec<ThemeEntry>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]

@@ -1,6 +1,7 @@
 use crate::error::ApiResult;
 use crate::models::{
     Anime, AnimeSynonym, Artist, Image, Resource, SearchResponse, Series, Song, Theme, ThemeEntry,
+    Video,
 };
 use reqwest::Response;
 use serde::de::DeserializeOwned;
@@ -115,6 +116,12 @@ impl AnimeThemesClient {
     /// Returns a theme by id
     pub async fn theme(&self, id: u32, include: &[&str]) -> ApiResult<Theme> {
         self.entry_by_id_with_include("theme", id, include).await
+    }
+
+    /// Returns a video by basename
+    pub async fn video(&self, basename: &str, include: &[&str]) -> ApiResult<Video> {
+        self.entry_by_id_with_include("video", basename, include)
+            .await
     }
 
     /// Generic endpoint with the format /<endpoint>/<id> returning the type on the json field <endpoint>
