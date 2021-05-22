@@ -83,3 +83,11 @@ async fn it_returns_songs_by_id() {
 
     assert!(result.themes.is_some())
 }
+
+#[tokio::test]
+async fn it_returns_themes_by_id() {
+    let client = AnimeThemesClient::default();
+    let result = client.theme(8187, &["entries"]).await.unwrap();
+
+    assert!(result.entries.is_some())
+}

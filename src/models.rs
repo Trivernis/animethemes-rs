@@ -50,6 +50,8 @@ pub struct Theme {
     pub group: String,
     pub slug: String,
     pub song: Option<Song>,
+    pub anime: Option<Anime>,
+    pub entries: Option<Vec<ThemeEntry>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]

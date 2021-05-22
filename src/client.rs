@@ -1,6 +1,6 @@
 use crate::error::ApiResult;
 use crate::models::{
-    Anime, AnimeSynonym, Artist, Image, Resource, SearchResponse, Series, Song, ThemeEntry,
+    Anime, AnimeSynonym, Artist, Image, Resource, SearchResponse, Series, Song, Theme, ThemeEntry,
 };
 use reqwest::Response;
 use serde::de::DeserializeOwned;
@@ -110,6 +110,11 @@ impl AnimeThemesClient {
     /// Returns a synonym by id
     pub async fn synonym(&self, id: u32, include: &[&str]) -> ApiResult<AnimeSynonym> {
         self.entry_by_id_with_include("synonym", id, include).await
+    }
+
+    /// Returns a theme by id
+    pub async fn theme(&self, id: u32, include: &[&str]) -> ApiResult<Theme> {
+        self.entry_by_id_with_include("theme", id, include).await
     }
 
     /// Generic endpoint with the format /<endpoint>/<id> returning the type on the json field <endpoint>
