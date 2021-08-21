@@ -17,6 +17,7 @@ pub struct Anime {
     pub year: u16,
     pub season: AnimeSeason,
     pub synopsis: String,
+    #[serde(alias = "animesynonyms")]
     pub synonyms: Option<Vec<AnimeSynonym>>,
     #[serde(alias = "animethemes")]
     pub themes: Option<Vec<Theme>>,
