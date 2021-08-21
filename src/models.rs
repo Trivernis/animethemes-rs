@@ -47,7 +47,7 @@ pub struct Theme {
     pub theme_type: ThemeType,
     #[serde(deserialize_with = "crate::utils::empty_string_as_none")]
     pub sequence: Option<u16>,
-    pub group: String,
+    pub group: Option<String>,
     pub slug: String,
     pub song: Option<Song>,
     pub anime: Option<Anime>,
@@ -175,10 +175,9 @@ pub enum ImageFacet {
 pub struct SearchResponse {
     pub anime: Option<Vec<Anime>>,
     pub artists: Option<Vec<Artist>>,
-    pub entries: Option<Vec<ThemeEntry>>,
     pub series: Option<Vec<Series>>,
     pub songs: Option<Vec<Song>>,
-    pub synonyms: Option<Vec<AnimeSynonym>>,
+    #[serde(alias = "animethemes")]
     pub themes: Option<Vec<Theme>>,
     pub videos: Option<Vec<Video>>,
 }
