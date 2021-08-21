@@ -85,7 +85,8 @@ impl AnimeThemesClient {
 
     /// Returns an entry by a given id
     pub async fn entry(&self, id: u32, include: &[&str]) -> ApiResult<ThemeEntry> {
-        self.entry_by_id_with_include("entry", id, include).await
+        self.entry_by_id_with_include("animethemeentry", id, include)
+            .await
     }
 
     /// Returns an image by id
@@ -110,12 +111,14 @@ impl AnimeThemesClient {
 
     /// Returns a synonym by id
     pub async fn synonym(&self, id: u32, include: &[&str]) -> ApiResult<AnimeSynonym> {
-        self.entry_by_id_with_include("synonym", id, include).await
+        self.entry_by_id_with_include("animesynonym", id, include)
+            .await
     }
 
     /// Returns a theme by id
     pub async fn theme(&self, id: u32, include: &[&str]) -> ApiResult<Theme> {
-        self.entry_by_id_with_include("theme", id, include).await
+        self.entry_by_id_with_include("animetheme", id, include)
+            .await
     }
 
     /// Returns a video by basename

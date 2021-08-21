@@ -20,4 +20,5 @@ mod utils;
 
 pub mod client;
 pub mod error;
+pub mod includes;
 pub mod models;
