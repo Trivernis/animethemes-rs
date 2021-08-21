@@ -1,0 +1,10 @@
+pub static THEMES: &str = "animethemes";
+pub static THEME: &str = "animetheme";
+pub static THEME_ENTRIES: &str = "animethemeentries";
+pub static SYNONYMS: &str = "animesynonyms";
+pub static RESOURCES: &str = "resources";
+pub static IMAGES: &str = "images";
+pub static SERIES: &str = "series";
+pub static SONGS: &str = "songs";
+pub static VIDEOS: &str = "videos";
+pub static ANIME: &str = "anime";

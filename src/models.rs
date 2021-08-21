@@ -17,7 +17,9 @@ pub struct Anime {
     pub year: u16,
     pub season: AnimeSeason,
     pub synopsis: String,
+    #[serde(alias = "animesynonyms")]
     pub synonyms: Option<Vec<AnimeSynonym>>,
+    #[serde(alias = "animethemes")]
     pub themes: Option<Vec<Theme>>,
     pub series: Option<Vec<Series>>,
     pub resource: Option<Vec<Resource>>,
@@ -47,10 +49,11 @@ pub struct Theme {
     pub theme_type: ThemeType,
     #[serde(deserialize_with = "crate::utils::empty_string_as_none")]
     pub sequence: Option<u16>,
-    pub group: String,
+    pub group: Option<String>,
     pub slug: String,
     pub song: Option<Song>,
     pub anime: Option<Anime>,
+    #[serde(alias = "animethemeentries")]
     pub entries: Option<Vec<ThemeEntry>>,
 }
 
@@ -66,6 +69,7 @@ pub struct Song {
     pub meta: EntryMetadata,
     pub title: String,
     pub artists: Option<Vec<Artist>>,
+    #[serde(alias = "animethemes")]
     pub themes: Option<Vec<Theme>>,
 }
 
@@ -91,6 +95,7 @@ pub struct ThemeEntry {
     pub spoiler: bool,
     pub notes: String,
     pub videos: Option<Vec<Video>>,
+    #[serde(alias = "animetheme")]
     pub theme: Option<Theme>,
 }
 
@@ -112,6 +117,7 @@ pub struct Video {
     pub source: Option<VideoSource>,
     pub overlap: VideoOverlap,
     pub link: String,
+    #[serde(alias = "animethemeentries")]
     pub entries: Option<Vec<ThemeEntry>>,
 }
 
@@ -175,10 +181,9 @@ pub enum ImageFacet {
 pub struct SearchResponse {
     pub anime: Option<Vec<Anime>>,
     pub artists: Option<Vec<Artist>>,
-    pub entries: Option<Vec<ThemeEntry>>,
     pub series: Option<Vec<Series>>,
     pub songs: Option<Vec<Song>>,
-    pub synonyms: Option<Vec<AnimeSynonym>>,
+    #[serde(alias = "animethemes")]
     pub themes: Option<Vec<Theme>>,
     pub videos: Option<Vec<Video>>,
 }
