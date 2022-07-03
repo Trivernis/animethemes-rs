@@ -10,6 +10,11 @@ macro_rules! theme_include {
         }
 
         impl $name {
+            pub fn all() -> Self {
+                Self {
+                    $($field: true),+
+                }
+            }
             $(pub fn $field(mut self) -> Self {
                 self.$field = true;
 
@@ -149,7 +154,7 @@ theme_include!(
 #[derive(Clone, Copy, Default, Debug)]
 pub struct SearchIncludes {
     pub anime: AnimeInclude,
-    pub animethemes: ThemeInclude,
+    pub themes: ThemeInclude,
     pub artists: ArtistInclude,
     pub series: SeriesInclude,
     pub songs: SongInclude,
@@ -157,10 +162,21 @@ pub struct SearchIncludes {
 }
 
 impl SearchIncludes {
+    pub fn all() -> Self {
+        Self {
+            anime: AnimeInclude::all(),
+            themes: ThemeInclude::all(),
+            artists: ArtistInclude::all(),
+            series: SeriesInclude::all(),
+            songs: SongInclude::all(),
+            videos: VideoInclude::all(),
+        }
+    }
+
     pub fn indo_includes(self) -> Vec<(String, String)> {
         let mut includes = Vec::new();
         let anime_includes = self.anime.includes();
-        let animetheme_includes = self.animethemes.includes();
+        let animetheme_includes = self.themes.includes();
         let artist_includes = self.artists.includes();
         let series_includes = self.series.includes();
         let song_includes = self.songs.includes();

@@ -91,7 +91,7 @@ pub struct ThemeEntry {
     pub meta: EntryMetadata,
     #[serde(deserialize_with = "crate::utils::empty_string_as_none")]
     pub version: Option<u32>,
-    pub episodes: String,
+    pub episodes: Option<String>,
     pub nsfw: bool,
     pub spoiler: bool,
     pub notes: Option<String>,

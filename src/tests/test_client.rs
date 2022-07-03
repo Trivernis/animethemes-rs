@@ -1,6 +1,22 @@
 use crate::client::AnimeThemesClient;
 use crate::includes::*;
 
+const TEST_QUERIES: &[&str] = &[
+    "vivy",
+    "papiri koumei",
+    "re:zero",
+    "demon slayer",
+    "spirited away",
+    "classroom of the elite",
+    "tower of god",
+    "made in abyss",
+    "wonder egg priority",
+    "spider",
+    "bookworm",
+    "slime",
+    "kaguya",
+];
+
 #[tokio::test]
 async fn it_searches() {
     let client = AnimeThemesClient::default();
@@ -24,6 +40,25 @@ async fn it_searches() {
     assert!(result.series.is_some());
     assert!(result.themes.is_some());
     assert!(result.videos.is_some());
+}
+
+#[tokio::test]
+async fn all_models_are_correct() {
+    let client = AnimeThemesClient::default();
+
+    for query in TEST_QUERIES {
+        println!("testing query '{query}'");
+        let result = client
+            .search(query, &[], SearchIncludes::all())
+            .await
+            .unwrap();
+        assert!(result.artists.is_some());
+        assert!(result.songs.is_some());
+        assert!(result.anime.is_some());
+        assert!(result.series.is_some());
+        assert!(result.themes.is_some());
+        assert!(result.videos.is_some());
+    }
 }
 
 #[tokio::test]
