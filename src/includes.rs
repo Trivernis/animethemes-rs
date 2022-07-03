@@ -168,37 +168,37 @@ impl SearchIncludes {
 
         if !anime_includes.is_empty() {
             includes.push((
-                format!("includes[{}]", AnimeInclude::include_type()),
+                format!("include[{}]", AnimeInclude::include_type()),
                 anime_includes.join(","),
             ));
         }
         if !animetheme_includes.is_empty() {
             includes.push((
-                format!("includes[{}]", ThemeInclude::include_type()),
+                format!("include[{}]", ThemeInclude::include_type()),
                 animetheme_includes.join(","),
             ));
         }
         if !artist_includes.is_empty() {
             includes.push((
-                format!("includes[{}]", ArtistInclude::include_type()),
+                format!("include[{}]", ArtistInclude::include_type()),
                 artist_includes.join(","),
             ));
         }
         if !series_includes.is_empty() {
             includes.push((
-                format!("includes[{}]", SeriesInclude::include_type()),
+                format!("include[{}]", SeriesInclude::include_type()),
                 series_includes.join(","),
             ));
         }
         if !song_includes.is_empty() {
             includes.push((
-                format!("includes[{}]", SongInclude::include_type()),
+                format!("include[{}]", SongInclude::include_type()),
                 song_includes.join(","),
             ));
         }
         if !video_includes.is_empty() {
             includes.push((
-                format!("includes[{}]", VideoInclude::include_type()),
+                format!("include[{}]", VideoInclude::include_type()),
                 video_includes.join(","),
             ));
         }
