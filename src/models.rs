@@ -33,6 +33,7 @@ pub enum AnimeSeason {
     Summer,
     Fall,
 }
+
 #[derive(Debug, Clone, Deserialize)]
 pub struct AnimeSynonym {
     #[serde(flatten)]
@@ -93,7 +94,7 @@ pub struct ThemeEntry {
     pub episodes: String,
     pub nsfw: bool,
     pub spoiler: bool,
-    pub notes: String,
+    pub notes: Option<String>,
     pub videos: Option<Vec<Video>>,
     #[serde(alias = "animetheme")]
     pub theme: Option<Theme>,

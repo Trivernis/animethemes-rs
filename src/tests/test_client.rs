@@ -6,7 +6,7 @@ async fn it_searches() {
     let client = AnimeThemesClient::default();
     let result = client
         .search(
-            "vivy",
+            "paripi",
             &[],
             SearchIncludes {
                 anime: AnimeInclude::default().images().series(),
