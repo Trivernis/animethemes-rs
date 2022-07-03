@@ -8,7 +8,7 @@ use reqwest::Response;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::collections::HashMap;
-use std::fmt::Display;
+use std::fmt::{Debug, Display};
 
 pub static DEFAULT_API_ENDPOINT: &str = "https://staging.animethemes.moe/api";
 pub static DEFAULT_VIDEO_ENDPOINT: &str = "https://animethemes.moe/video/";
@@ -58,6 +58,7 @@ impl AnimeThemesClient {
     /// assert!(response.songs.is_some());
     /// # Ok(()) }
     /// ```
+    #[tracing::instrument(level = "debug", skip(self))]
     pub async fn search(
         &self,
         query: &str,
@@ -77,67 +78,78 @@ impl AnimeThemesClient {
     }
 
     /// Returns an anime by a given slug string
+    #[tracing::instrument(level = "debug", skip(self))]
     pub async fn anime(&self, slug: &str, include: AnimeInclude) -> ApiResult<Anime> {
         self.entry_by_id_with_include("anime", slug, include.includes())
             .await
     }
 
     /// Returns an artist by a given slug string
+    #[tracing::instrument(level = "debug", skip(self))]
     pub async fn artist(&self, slug: &str, include: ArtistInclude) -> ApiResult<Artist> {
         self.entry_by_id_with_include("artist", slug, include.includes())
             .await
     }
 
     /// Returns an entry by a given id
+    #[tracing::instrument(level = "debug", skip(self))]
     pub async fn entry(&self, id: u32, include: ThemeEntryInclude) -> ApiResult<ThemeEntry> {
         self.entry_by_id_with_include("animethemeentry", id, include.includes())
             .await
     }
 
     /// Returns an image by id
+    #[tracing::instrument(level = "debug", skip(self))]
     pub async fn image(&self, id: u32, include: ImageInclude) -> ApiResult<Image> {
         self.entry_by_id_with_include("image", id, include.includes())
             .await
     }
 
     /// Returns a resource by id
+    #[tracing::instrument(level = "debug", skip(self))]
     pub async fn resource(&self, id: u32, include: ResourceInclude) -> ApiResult<Resource> {
         self.entry_by_id_with_include("resource", id, include.includes())
             .await
     }
 
     /// Returns a series by slug
+    #[tracing::instrument(level = "debug", skip(self))]
     pub async fn series(&self, slug: &str, include: SeriesInclude) -> ApiResult<Series> {
         self.entry_by_id_with_include("series", slug, include.includes())
             .await
     }
 
     /// Returns a song by id
+    #[tracing::instrument(level = "debug", skip(self))]
     pub async fn song(&self, id: u32, include: SongInclude) -> ApiResult<Song> {
         self.entry_by_id_with_include("song", id, include.includes())
             .await
     }
 
     /// Returns a synonym by id
+    #[tracing::instrument(level = "debug", skip(self))]
     pub async fn synonym(&self, id: u32, include: SynonymInclude) -> ApiResult<AnimeSynonym> {
         self.entry_by_id_with_include("animesynonym", id, include.includes())
             .await
     }
 
     /// Returns a theme by id
+    #[tracing::instrument(level = "debug", skip(self))]
     pub async fn theme(&self, id: u32, include: ThemeInclude) -> ApiResult<Theme> {
         self.entry_by_id_with_include("animetheme", id, include.includes())
             .await
     }
 
     /// Returns a video by basename
+    #[tracing::instrument(level = "debug", skip(self))]
     pub async fn video(&self, basename: &str, include: VideoInclude) -> ApiResult<Video> {
         self.entry_by_id_with_include("video", basename, include.includes())
             .await
     }
 
     /// Generic endpoint with the format /<endpoint>/<id> returning the type on the json field <endpoint>
-    async fn entry_by_id_with_include<T: DeserializeOwned, I: Display>(
+    #[tracing::instrument(level = "debug", skip(self))]
+    async fn entry_by_id_with_include<T: DeserializeOwned, I: Display + Debug>(
         &self,
         endpoint: &str,
         id: I,
@@ -156,7 +168,12 @@ impl AnimeThemesClient {
     }
 
     /// Starts a get request to the API endpoint
-    async fn api_get<T: Serialize + ?Sized>(&self, path: &str, query: &T) -> ApiResult<Response> {
+    #[tracing::instrument(level = "trace", skip(self))]
+    async fn api_get<T: Serialize + Debug + ?Sized>(
+        &self,
+        path: &str,
+        query: &T,
+    ) -> ApiResult<Response> {
         let response = self
             .client
             .get(format!("{}{}", self.api_endpoint, path))
