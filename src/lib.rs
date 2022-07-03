@@ -4,10 +4,11 @@
 //! ```
 //! # use animethemes_rs::error::ApiResult;
 //! use animethemes_rs::client::AnimeThemesClient;
+//! use animethemes_rs::includes::SearchIncludes;
 //!
 //! # async fn a() -> ApiResult<()> {
 //! let client = AnimeThemesClient::default();
-//! let response = client.search("Vivy", &[], &[]).await?;
+//! let response = client.search("Vivy", &[], SearchIncludes::default()).await?;
 //!
 //! assert!(response.anime.is_some());
 //! assert!(response.videos.is_some());

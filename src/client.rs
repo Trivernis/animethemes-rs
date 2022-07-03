@@ -1,4 +1,5 @@
 use crate::error::ApiResult;
+use crate::includes::*;
 use crate::models::{
     Anime, AnimeSynonym, Artist, Image, Resource, SearchResponse, Series, Song, Theme, ThemeEntry,
     Video,
@@ -15,7 +16,7 @@ pub static DEFAULT_VIDEO_ENDPOINT: &str = "https://animethemes.moe/video/";
 #[derive(Clone, Debug)]
 pub struct AnimeThemesClient {
     api_endpoint: String,
-    video_endpoint: String,
+    pub video_endpoint: String,
     client: reqwest::Client,
 }
 
@@ -47,10 +48,11 @@ impl AnimeThemesClient {
     /// ```
     /// # use animethemes_rs::error::ApiResult;
     /// use animethemes_rs::client::AnimeThemesClient;
+    /// use animethemes_rs::includes::SearchIncludes;
     ///
     /// # async fn a() -> ApiResult<()> {
     /// let client = AnimeThemesClient::default();
-    /// let response = client.search("Attack on Titan", &[], &[]).await?;
+    /// let response = client.search("Attack on Titan", &[], SearchIncludes::default()).await?;
     ///
     /// assert!(response.anime.is_some());
     /// assert!(response.songs.is_some());
@@ -60,12 +62,13 @@ impl AnimeThemesClient {
         &self,
         query: &str,
         fields: &[&str],
-        include: &[&str],
+        include: SearchIncludes,
     ) -> ApiResult<SearchResponse> {
-        let mut query = vec![("q", query.to_string()), ("include", include.join(","))];
+        let mut query = vec![("q".to_string(), query.to_string())];
+        query.append(&mut include.indo_includes());
 
         if !fields.is_empty() {
-            query.push(("fields[search]", fields.join(",")));
+            query.push(("fields[search]".to_string(), fields.join(",")));
         }
         let mut response: HashMap<String, SearchResponse> =
             self.api_get("/search", &query[..]).await?.json().await?;
@@ -74,56 +77,62 @@ impl AnimeThemesClient {
     }
 
     /// Returns an anime by a given slug string
-    pub async fn anime(&self, slug: &str, include: &[&str]) -> ApiResult<Anime> {
-        self.entry_by_id_with_include("anime", slug, include).await
+    pub async fn anime(&self, slug: &str, include: AnimeInclude) -> ApiResult<Anime> {
+        self.entry_by_id_with_include("anime", slug, include.includes())
+            .await
     }
 
     /// Returns an artist by a given slug string
-    pub async fn artist(&self, slug: &str, include: &[&str]) -> ApiResult<Artist> {
-        self.entry_by_id_with_include("artist", slug, include).await
+    pub async fn artist(&self, slug: &str, include: ArtistInclude) -> ApiResult<Artist> {
+        self.entry_by_id_with_include("artist", slug, include.includes())
+            .await
     }
 
     /// Returns an entry by a given id
-    pub async fn entry(&self, id: u32, include: &[&str]) -> ApiResult<ThemeEntry> {
-        self.entry_by_id_with_include("animethemeentry", id, include)
+    pub async fn entry(&self, id: u32, include: ThemeEntryInclude) -> ApiResult<ThemeEntry> {
+        self.entry_by_id_with_include("animethemeentry", id, include.includes())
             .await
     }
 
     /// Returns an image by id
-    pub async fn image(&self, id: u32, include: &[&str]) -> ApiResult<Image> {
-        self.entry_by_id_with_include("image", id, include).await
+    pub async fn image(&self, id: u32, include: ImageInclude) -> ApiResult<Image> {
+        self.entry_by_id_with_include("image", id, include.includes())
+            .await
     }
 
     /// Returns a resource by id
-    pub async fn resource(&self, id: u32, include: &[&str]) -> ApiResult<Resource> {
-        self.entry_by_id_with_include("resource", id, include).await
+    pub async fn resource(&self, id: u32, include: ResourceInclude) -> ApiResult<Resource> {
+        self.entry_by_id_with_include("resource", id, include.includes())
+            .await
     }
 
     /// Returns a series by slug
-    pub async fn series(&self, slug: &str, include: &[&str]) -> ApiResult<Series> {
-        self.entry_by_id_with_include("series", slug, include).await
+    pub async fn series(&self, slug: &str, include: SeriesInclude) -> ApiResult<Series> {
+        self.entry_by_id_with_include("series", slug, include.includes())
+            .await
     }
 
     /// Returns a song by id
-    pub async fn song(&self, id: u32, include: &[&str]) -> ApiResult<Song> {
-        self.entry_by_id_with_include("song", id, include).await
+    pub async fn song(&self, id: u32, include: SongInclude) -> ApiResult<Song> {
+        self.entry_by_id_with_include("song", id, include.includes())
+            .await
     }
 
     /// Returns a synonym by id
-    pub async fn synonym(&self, id: u32, include: &[&str]) -> ApiResult<AnimeSynonym> {
-        self.entry_by_id_with_include("animesynonym", id, include)
+    pub async fn synonym(&self, id: u32, include: SynonymInclude) -> ApiResult<AnimeSynonym> {
+        self.entry_by_id_with_include("animesynonym", id, include.includes())
             .await
     }
 
     /// Returns a theme by id
-    pub async fn theme(&self, id: u32, include: &[&str]) -> ApiResult<Theme> {
-        self.entry_by_id_with_include("animetheme", id, include)
+    pub async fn theme(&self, id: u32, include: ThemeInclude) -> ApiResult<Theme> {
+        self.entry_by_id_with_include("animetheme", id, include.includes())
             .await
     }
 
     /// Returns a video by basename
-    pub async fn video(&self, basename: &str, include: &[&str]) -> ApiResult<Video> {
-        self.entry_by_id_with_include("video", basename, include)
+    pub async fn video(&self, basename: &str, include: VideoInclude) -> ApiResult<Video> {
+        self.entry_by_id_with_include("video", basename, include.includes())
             .await
     }
 
@@ -132,7 +141,7 @@ impl AnimeThemesClient {
         &self,
         endpoint: &str,
         id: I,
-        include: &[&str],
+        include: Vec<String>,
     ) -> ApiResult<T> {
         let mut response: HashMap<String, T> = self
             .api_get(

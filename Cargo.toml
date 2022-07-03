@@ -1,8 +1,8 @@
 [package]
 name = "animethemes-rs"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["trivernis <trivernis@protonmail.com>"]
-edition = "2018"
+edition = "2021"
 readme = "README.md"
 repository = "https://github.com/trivernis/animethemes-rs"
 license = "Apache-2.0"
