@@ -6,10 +6,13 @@ async fn it_searches() {
     let client = AnimeThemesClient::default();
     let result = client
         .search(
-            "paripi",
+            "re:zero",
             &[],
             SearchIncludes {
-                anime: AnimeInclude::default().images().series(),
+                anime: AnimeInclude::default()
+                    .themes()
+                    .themes_entries()
+                    .themes_entries_videos(),
                 ..Default::default()
             },
         )

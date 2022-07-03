@@ -16,7 +16,7 @@ pub struct Anime {
     pub slug: String,
     pub year: u16,
     pub season: AnimeSeason,
-    pub synopsis: String,
+    pub synopsis: Option<String>,
     #[serde(alias = "animesynonyms")]
     pub synonyms: Option<Vec<AnimeSynonym>>,
     #[serde(alias = "animethemes")]
@@ -120,6 +120,7 @@ pub struct Video {
     pub link: String,
     #[serde(alias = "animethemeentries")]
     pub entries: Option<Vec<ThemeEntry>>,
+    pub tags: Option<String>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
