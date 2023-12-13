@@ -1,6 +1,6 @@
 [package]
 name = "animethemes-rs"
-version = "0.4.4"
+version = "0.4.5"
 authors = ["trivernis <trivernis@protonmail.com>"]
 edition = "2021"
 readme = "README.md"
@@ -11,17 +11,17 @@ description = "A Rust wrapper for the AnimeThemes api"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-thiserror = "1.0.31"
-tracing = "0.1.35"
+thiserror = "1.0.50"
+tracing = "0.1.40"
 
 [dependencies.reqwest]
-version = "0.11.11"
+version = "0.11.22"
 features = ["json"]
 
 [dependencies.serde]
-version = "1.0.138"
+version = "1.0.193"
 features = ["serde_derive"]
 
 [dev-dependencies.tokio]
-version = "1.19.2"
+version = "1.35.0"
 features = ["macros", "test-util"]
