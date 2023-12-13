@@ -10,7 +10,7 @@ use serde::Serialize;
 use std::collections::HashMap;
 use std::fmt::{Debug, Display};
 
-pub static DEFAULT_API_ENDPOINT: &str = "https://staging.animethemes.moe/api";
+pub static DEFAULT_API_ENDPOINT: &str = "https://api.animethemes.moe";
 pub static DEFAULT_VIDEO_ENDPOINT: &str = "https://animethemes.moe/video/";
 
 #[derive(Clone, Debug)]
